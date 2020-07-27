@@ -131,17 +131,18 @@ class Article
     }
 
     //latest articles
-    public function get_latest_article() {
+    public function get_latest_articles ()
+    {
         global $database;
-
+    
         $sql = "SELECT articles.article_id, articles.user_id, articles.category_id, articles.article_title,
                 articles.article_body,
                 categories.category_title, users.user_id, users.firstname, users.lastname
                 FROM ". $this->table ."
                 JOIN categories on articles.category_id = categories.category_id
                 JOIN users on users.user_id = articles.user_id order by articles.article_id desc limit 5";
-
-        $result = $database->http_build_query($sql);
+    
+        $result = $database->query($sql);
         $article_info = $database->fetch_array($result);
 
         return $article_info;
