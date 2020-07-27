@@ -9,6 +9,7 @@ class User
 
     //user properties
     public $user_id;
+    public $auth_key;
     public $firstname;
     public $lastname;
     public $email;
@@ -104,7 +105,8 @@ class User
     }
 
     //get user details
-    public function get_user_details() {
+    public function get_user_details()
+    {
         global $database;
 
         $this->email = trim(htmlspecialchars(strip_tags($this->email)));
@@ -115,6 +117,26 @@ class User
         $user_info = $database->fetch_row($result);
 
         return $user_info;
+    }
+
+    //function to verify user authKey
+    public function verify_auth_key()
+    {
+        $this->auth_key = trim(htmlspecialchars(strip_tags($this->auth_key)));
+
+        global $database;
+
+        $sql = "SELECT user_id, firstname, lastname, email, auth_key FROM ". $this->table ."
+        WHERE auth_key = '".$database->escape_value($this->auth_key)."'";
+
+        $result = $database->query($sql);
+        $user_info = $database->fetch_row($result);
+
+        if (empty($user_info)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
