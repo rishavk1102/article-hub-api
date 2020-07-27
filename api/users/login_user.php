@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($info = $user->check_user_credentials()) {
             echo json_encode(array('success'=> 1, 'user'=> $info));
         } else {
-            echo json_encode(array('success'=> 1, 'message'=> 'invalid email or password...'));
+            echo json_encode(array('success'=> 0, 'message'=> 'invalid email or password...'));
         }
         // } else {
         //     die(header('HTTP/1.1 401 Unauthorized'));
