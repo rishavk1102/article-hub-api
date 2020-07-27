@@ -1,7 +1,7 @@
 <?php
 
-require_once('../includes/Database.php');
-require_once('../includes/Bcrypt.php');
+require_once('/opt/lampp/htdocs/api_code/includes/Database.php');
+require_once('/opt/lampp/htdocs/api_code/includes/Bcrypt.php');
 
 class User
 {
@@ -60,10 +60,13 @@ class User
 
         $hashed_password = Bcrypt::hashPassword($this->password);
 
-        $sql = "INSERT INTO $this->table (firstname, lastname, email, password) VALUES (
-            '" .$database->escape_value($this->firstname). "'
-            '" .$database->escape_value($this->lastname). "'
-            '" .$database->escape_value($this->email). "'
+        $this->auth_key = md5(rand()); 
+
+        $sql = "INSERT INTO $this->table (auth_key, firstname, lastname, email, password) VALUES (
+            '" .$database->escape_value($this->auth_key). "',
+            '" .$database->escape_value($this->firstname). "',
+            '" .$database->escape_value($this->lastname). "',
+            '" .$database->escape_value($this->email). "',
             '" .$database->escape_value($hashed_password). "'
         )";
 
@@ -111,7 +114,7 @@ class User
 
         $this->email = trim(htmlspecialchars(strip_tags($this->email)));
 
-        $sql = "SELECT user_id, firstname, lastname, email, password FROM " .$this->table. " WHERE email = '" .$database->escape_value($this->email). "'";
+        $sql = "SELECT user_id, auth_key, firstname, lastname, email, password FROM " .$this->table. " WHERE email = '" .$database->escape_value($this->email). "'";
 
         $result = $database->query($sql);
         $user_info = $database->fetch_row($result);
